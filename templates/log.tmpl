@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Logs</title>
+        <link rel="stylesheet" href="static/style.css"/>
+    </head>
+    <body>
+        <div style="font-family: monospace">
+            {{range $val := .}}
+                {{$val}}<br>
+            {{end}}
+        </div>
+    </body>
+</html>

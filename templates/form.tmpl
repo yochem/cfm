@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Config</title>
+        <link rel="stylesheet" href="static/style.css"/>
+    </head>
+    <body>
+        <div>
+        <h1>Configuration for TL display</h1>
+        Currently selected: {{.Selected}}
+        <form method="POST">
+            <label for="settings">Choose a setting:</label><br>
+            <select id="settings" name="settings" value="time">
+            {{range $val := .Options}}
+                <option value="{{$val}}">{{$val}}</option>
+            {{end}}
+            </select>
+            <br><br>
+            <input type="submit">
+        </form>
+        <a href="log">Check the log</a>
+        </div>
+        <script>document.getElementById('settings').value="{{.Selected}}";</script>
+    </body>
+</html>

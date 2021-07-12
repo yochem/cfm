@@ -1,0 +1,18 @@
+body {
+    font-size: 1.5em;
+    margin: 0;
+    width: 100%;
+    background-color: #fff;
+    font-family: Courier, monospace;
+    line-height: 130%;
+}
+
+div {
+    width: max-content;
+    margin: 30px auto;
+    max-width: 70%;
+}
+
+@media screen and (max-width: 600px) {
+    div { width: 90%; }
+}
