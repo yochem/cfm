@@ -1,46 +1,52 @@
 package main
 
 import (
+	"encoding/json"
+	auth "github.com/abbot/go-http-auth"
+	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
-	auth "github.com/abbot/go-http-auth"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Settings struct {
-	Options []string
+	Options  []string
 	Selected string
+}
+
+type Config struct {
+	Name string
+	TL   []bool
 }
 
 var (
 	WarningLogger *log.Logger
-	ErrorLogger *log.Logger
-	InfoLogger *log.Logger
-	cfg = Settings {
-		Options: []string {"off", "time", "compact"},
+	ErrorLogger   *log.Logger
+	InfoLogger    *log.Logger
+	cfg           = Settings{
+		Options:  []string{"off", "time", "compact"},
 		Selected: "compact",
 	}
 )
 
 func init() {
-	os.Remove("logs.txt")
-	file, err := os.OpenFile("logs.txt", os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Println("can not create log file")
 	}
 
-	InfoLogger = log.New(file, "INFO:    ", log.Ldate|log.Ltime|log.Lshortfile)
-	WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(file, "ERROR:   ", log.Ldate|log.Ltime|log.Lshortfile)
+	InfoLogger = log.New(file, "[I] ", log.Ldate|log.Ltime|log.Lshortfile)
+	WarningLogger = log.New(file, "[W] ", log.Ldate|log.Ltime|log.Lshortfile)
+	ErrorLogger = log.New(file, "[E] ", log.Ldate|log.Ltime|log.Lshortfile)
 
+	InfoLogger.Println("===============================================")
 	InfoLogger.Println("Server started")
 }
 
-func Secret(user, realm string) string {
+func Secret(user, _ string) string {
 	if user == "jord" {
 		content, _ := ioutil.ReadFile("passwd.txt")
 		pw := strings.Split(string(content), "\n")[0]
@@ -61,11 +67,10 @@ func homePage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	val := r.FormValue("settings")
 	cfg.Selected = val
 	InfoLogger.Printf("New mode selected: %s\n", val)
-
 	tmpl.Execute(w, cfg)
 }
 
-func logPage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
+func logPage(w http.ResponseWriter, _ *auth.AuthenticatedRequest) {
 	tmpl := template.Must(template.ParseFiles("templates/log.tmpl"))
 	content, err := ioutil.ReadFile("logs.txt")
 	if err != nil {
@@ -87,19 +92,30 @@ func setPasswordPage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	file, fileErr := os.OpenFile("passwd.txt", os.O_CREATE|os.O_WRONLY, 0666)
 	file.Truncate(0)
 	if hashErr != nil || fileErr != nil {
-		w.Write([]byte("<script>alert('hi');</script>"))
+		ErrorLogger.Println("not able to get password, run scripts/newpassword.go")
 	}
 	file.WriteString(string(hashedPassword))
 	defer file.Close()
 	tmpl.Execute(w, nil)
 }
 
+func receiveSettings(w http.ResponseWriter, r *http.Request) {
+	var cfg Config
+	err := json.NewDecoder(r.Body).Decode(&cfg)
+	if err != nil {
+		WarningLogger.Println("could not decode JSON")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	InfoLogger.Printf("Received new settings: %s\n", cfg.Name)
+}
+
 func main() {
-	// use this to add the css
-	// http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	authenticator := auth.NewBasicAuthenticator("example.com", Secret)
+	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 	http.HandleFunc("/", authenticator.Wrap(homePage))
 	http.HandleFunc("/log", authenticator.Wrap(logPage))
 	http.HandleFunc("/setpw", authenticator.Wrap(setPasswordPage))
-	http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/ajax", receiveSettings)
+	http.ListenAndServe(":80", nil)
 }

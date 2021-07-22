@@ -1,0 +1,79 @@
+body {
+  background-color: #000000;
+  display: flex;
+  align-content: center;
+}
+
+#matrix {
+  width: 1100px;
+  height: 315px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 10%;
+  padding: 20px;
+  padding-right: 40px;
+}
+
+.digit {
+  position: relative;
+  width: 25%;
+  height: 100%;
+}
+
+.tl {
+  height: 115px;
+  width: 18px;
+  position: absolute;
+}
+
+.on {
+  background-color: #FFFFFF;
+}
+
+.off {
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: #555555;
+  border-width: 1px;
+  background-color: #000000;
+}
+
+.upper {
+  top: -40px;
+  left: 90px;
+  transform: rotate(90deg);
+}
+
+.upright {
+  top: 30px;
+  left: 160px;
+}
+
+.lowright {
+  top: 170px;
+  left: 160px;
+}
+
+.lower {
+  top: 240px;
+  left: 90px;
+  transform: rotate(90deg);
+}
+
+.lowleft {
+  top: 170px;
+  left: 20px;
+}
+
+.upleft {
+  top: 30px;
+  left: 20px;
+}
+
+.middle {
+  top: 100px;
+  left: 90px;
+  transform: rotate(90deg);
+}
