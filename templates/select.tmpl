@@ -3,31 +3,19 @@
   <head>
     <meta charset="utf-8">
     <title>Home</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/public/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        var voorInstellingen = [
-        {Name: '325614', TL: [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1,0, 1, 1, 0, 0, 0, 0,  0, 1, 1, 0, 0, 1, 1]},
-        {Name: '123456', TL: [0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1]},
-        {Name: '256145', TL: [1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1]},
-        {Name: '612155', TL: [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1]},
-        {Name: '125461', TL: [0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0]},
-        {Name: '345614', TL: [1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1]},
-        {Name: 'Alles uit', TL: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
-        {Name: 'Alles aan', TL: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
-        {Name: '8====D', TL: [true, true, true, true, true, true, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, true, false, false, false, true, true]},
-        ];
-    </script>
-    <script src="select.js" charset="utf-8" defer></script>
+    <script>var voorInstellingen = {{.Artworks}};</script>
+    <script src="/public/select.js" charset="utf-8" defer></script>
   </head>
   <body id="indexBody">
 
 
 
     <div id="kolomLinks">
-      <img src="logoCFM.svg" alt="Logo C.F.M.">
+      <img src="public/logoCFM.svg" alt="Logo C.F.M.">
       <div id="matrix2">
         <div class="digit2" id="first">
           <div class="tl2 off2 upper2" id="T0"></div>
@@ -84,7 +72,7 @@
           <div class="tl2 off2 middle2" id="T41"></div>
         </div>
       </div>
-      <a href="create.html">  <button id="createNew" type="button">Create new</button></a>
+      <a href="create.html"><button id="createNew" type="button">Create new</button></a>
 
     </div>
 
@@ -94,9 +82,5 @@
       <ul id="namen">
       </ul>
     </div>
-
-
-
-
   </body>
 </html>

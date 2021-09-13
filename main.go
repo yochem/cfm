@@ -12,24 +12,22 @@ import (
 	"strings"
 )
 
-type Settings struct {
-	Options  []string
-	Selected string
+type Artwork struct {
+	Name     string
+	TL       []bool
+	InRandom bool
 }
 
-type Config struct {
-	Name string
-	TL   []bool
+type Settings struct {
+	Artworks []Artwork
+	Selected string
 }
 
 var (
 	WarningLogger *log.Logger
 	ErrorLogger   *log.Logger
 	InfoLogger    *log.Logger
-	cfg           = Settings{
-		Options:  []string{"off", "time", "compact"},
-		Selected: "compact",
-	}
+	cfg           Settings
 )
 
 func init() {
@@ -44,6 +42,8 @@ func init() {
 
 	InfoLogger.Println("===============================================")
 	InfoLogger.Println("Server started")
+
+	loadArtworks("./artworks.json")
 }
 
 func Secret(user, _ string) string {
@@ -56,7 +56,7 @@ func Secret(user, _ string) string {
 }
 
 func homePage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
-	tmpl := template.Must(template.ParseFiles("templates/form.tmpl"))
+	tmpl := template.Must(template.ParseFiles("templates/select.tmpl"))
 
 	if r.Method != http.MethodPost {
 		tmpl.Execute(w, cfg)
@@ -100,7 +100,7 @@ func setPasswordPage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 }
 
 func receiveSettings(w http.ResponseWriter, r *http.Request) {
-	var cfg Config
+	var cfg Artwork
 	err := json.NewDecoder(r.Body).Decode(&cfg)
 	if err != nil {
 		WarningLogger.Println("could not decode JSON")
@@ -108,6 +108,22 @@ func receiveSettings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	InfoLogger.Printf("Received new settings: %s\n", cfg.Name)
+}
+
+func loadArtworks(filepath string) {
+	fileContent, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		ErrorLogger.Printf("Not able to read artworks JSON: %s\n", err)
+		panic("Not able to read artworks JSON")
+	}
+
+	err = json.Unmarshal(fileContent, &cfg)
+	if err != nil {
+		ErrorLogger.Printf("json.Unmarshal error: %s\n", err)
+		panic("error parsing artworks JSON")
+	}
+
+	InfoLogger.Println("succesfully loaded in artworks from JSON")
 }
 
 func main() {

@@ -1,0 +1,55 @@
+{
+    "artworks": [
+        {
+            "name": "3256true4",
+            "TL": [true, true, true, true, false, false, true, true, true, false, true, true, false, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false, false, true, true, false, false, true, true],
+            "inRandom": true
+        },
+        {
+            "name": "true23456",
+            "TL": [false, true, true, false, false, false, false, true, true, false, true, true, false, true, true, true, true, true, false, false, true, false, true, true, false, false, true, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true],
+            "inRandom": true
+        },
+        {
+            "name": "256true45",
+            "TL": [true, true, false, true, true, false, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false, false, true, true, false, false, true, true, true, false, true, true, false, true, true],
+            "inRandom": true
+        },
+        {
+            "name": "6true2true55",
+            "TL": [true, false, true, true, true, true, true, false, true, true, false, false, false, false, true, true, false, true, true, false, true, false, true, true, false, false, false, false, true, false, true, true, false, true, true, true, false, true, true, false, true, true],
+            "inRandom": true
+        },
+        {
+            "name": "true2546true",
+            "TL": [false, true, true, false, false, false, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false],
+            "inRandom": true
+        },
+        {
+            "name": "3456true4",
+            "TL": [true, true, true, true, false, false, true, false, true, true, false, false, true, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false, false, true, true, false, false, true, true],
+            "inRandom": true
+        },
+        {
+            "name": "Alles uit",
+            "TL": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            "inRandom": true
+        },
+        {
+            "name": "Alles aan",
+            "TL": [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+            "inRandom": true
+        },
+        {
+            "name": "8====D",
+            "TL": [true, true, true, true, true, true, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, true, false, false, false, true, true],
+            "inRandom": true
+        },
+        {
+            "name": "Yochem",
+            "TL": [true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, true, false, false, false, true, true],
+            "inRandom": true
+        }
+    ],
+    "selected": "Yochem"
+}

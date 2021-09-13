@@ -65,6 +65,11 @@ void time(DateTime time) {
     }
 }
 
+bool startswith(char *pre, char *str) {
+    return strncmp(pre, str, strlen(pre)) == 0;
+}
+
+
 void setup() {
     Serial.begin(9600);
 
@@ -89,12 +94,14 @@ void loop() {
     String setting = Serial.readString();
     int setting_length = setting.length() - 1; // skip the newline char on the end
 
-    if (setting == "time") {
+    // time is a special case that gets handled on the arduino itself
+    if (startswith("time", setting)) {
         rtc.adjust(DateTime(unix_time));
         // todo
         DateTime now = rtc.now();
         time(now);
         delay(1000);
+        return;
     }
 
     if (setting_length != TL_COUNT) {

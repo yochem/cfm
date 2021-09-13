@@ -14,7 +14,7 @@ func FindDevice() (string, error) {
 	contents, _ := ioutil.ReadDir("/dev")
 
 	for _, f := range contents {
-		if strings.Contains(f.Name(), "tty.usbserial") ||
+		if strings.Contains(f.Name(), "tty.usb") ||
 		   strings.Contains(f.Name(), "ttyUSB") {
 			fmt.Println("Arduino found: /dev/" + f.Name())
 			return "/dev/" + f.Name(), nil
@@ -31,9 +31,10 @@ func GetMode() (string, error) {
 }
 
 func SetMode(command byte, argument float32, serialPort io.ReadWriteCloser) error {
-	if serialPort == nil {
+	// todo return errors
+	/* if serialPort == nil {
 		return nil
-	}
+	} */
 
 	// Package argument for transmission
 	bufOut := new(bytes.Buffer)

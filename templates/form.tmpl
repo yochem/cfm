@@ -11,7 +11,7 @@
         <form method="POST">
             <label for="settings">Choose a setting:</label><br>
             <select id="settings" name="settings" value="time">
-            {{range $val := .Options}}
+            {{range $artwork := .Artworks}}
                 <option value="{{$val}}">{{$val}}</option>
             {{end}}
             </select>
