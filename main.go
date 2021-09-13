@@ -23,11 +23,16 @@ type Settings struct {
 	Selected string
 }
 
+type Config struct {
+	ArtworksFile string
+}
+
 var (
 	WarningLogger *log.Logger
 	ErrorLogger   *log.Logger
 	InfoLogger    *log.Logger
-	cfg           Settings
+	CFM           Settings
+	DATA_FILE     string
 )
 
 func init() {
@@ -59,15 +64,15 @@ func homePage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	tmpl := template.Must(template.ParseFiles("templates/select.tmpl"))
 
 	if r.Method != http.MethodPost {
-		tmpl.Execute(w, cfg)
+		tmpl.Execute(w, CFM)
 		return
 	}
 
 	// TODO: do something with new value
 	val := r.FormValue("settings")
-	cfg.Selected = val
+	CFM.Selected = val
 	InfoLogger.Printf("New mode selected: %s\n", val)
-	tmpl.Execute(w, cfg)
+	tmpl.Execute(w, CFM)
 }
 
 func logPage(w http.ResponseWriter, _ *auth.AuthenticatedRequest) {
@@ -99,15 +104,36 @@ func setPasswordPage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	tmpl.Execute(w, nil)
 }
 
-func receiveSettings(w http.ResponseWriter, r *http.Request) {
-	var cfg Artwork
-	err := json.NewDecoder(r.Body).Decode(&cfg)
+func receiveNewArtwork(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		w.WriteHeader(403)
+		w.Write([]byte("403 Forbidden"))
+		return
+	}
+
+	var art Artwork
+	err := json.NewDecoder(r.Body).Decode(&art)
+	art.InRandom = true
+
 	if err != nil {
-		WarningLogger.Println("could not decode JSON")
+		WarningLogger.Printf("JSON decode error: %s\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	InfoLogger.Printf("Received new settings: %s\n", cfg.Name)
+	InfoLogger.Printf("Received new artwork: %s\n", art.Name)
+	CFM.Artworks = append(CFM.Artworks, art)
+	writeArtworks("./artworks.json")
+}
+
+func writeArtworks(filepath string) {
+	jsonString, err := json.Marshal(&CFM)
+	if err != nil {
+		WarningLogger.Printf("json.Marshal error: %s\n", err)
+		return
+	}
+
+	ioutil.WriteFile(filepath, jsonString, os.ModePerm)
+	InfoLogger.Println("wrote new data to JSON file")
 }
 
 func loadArtworks(filepath string) {
@@ -117,7 +143,7 @@ func loadArtworks(filepath string) {
 		panic("Not able to read artworks JSON")
 	}
 
-	err = json.Unmarshal(fileContent, &cfg)
+	err = json.Unmarshal(fileContent, &CFM)
 	if err != nil {
 		ErrorLogger.Printf("json.Unmarshal error: %s\n", err)
 		panic("error parsing artworks JSON")
@@ -128,10 +154,16 @@ func loadArtworks(filepath string) {
 
 func main() {
 	authenticator := auth.NewBasicAuthenticator("example.com", Secret)
-	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
+
+	// static public files
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./public/js"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./public/css"))))
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("./public/img"))))
+	http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("./public/html"))))
+
 	http.HandleFunc("/", authenticator.Wrap(homePage))
 	http.HandleFunc("/log", authenticator.Wrap(logPage))
 	http.HandleFunc("/setpw", authenticator.Wrap(setPasswordPage))
-	http.HandleFunc("/ajax", receiveSettings)
+	http.HandleFunc("/ajax", receiveNewArtwork)
 	http.ListenAndServe(":80", nil)
 }

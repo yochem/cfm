@@ -1,55 +1,65 @@
 {
-    "artworks": [
+    "Artworks":[
         {
-            "name": "3256true4",
-            "TL": [true, true, true, true, false, false, true, true, true, false, true, true, false, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false, false, true, true, false, false, true, true],
-            "inRandom": true
+            "Name":"3256true4",
+            "TL":[true,true,true,true,false,false,true,true,true,false,true,true,false,true,true,false,true,true,false,true,true,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,true,true,false,false,true,true],
+            "InRandom":true
         },
         {
-            "name": "true23456",
-            "TL": [false, true, true, false, false, false, false, true, true, false, true, true, false, true, true, true, true, true, false, false, true, false, true, true, false, false, true, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true],
-            "inRandom": true
+            "Name":"true23456",
+            "TL":[false,true,true,false,false,false,false,true,true,false,true,true,false,true,true,true,true,true,false,false,true,false,true,true,false,false,true,true,true,false,true,true,false,true,true,true,false,true,true,true,true,true],
+            "InRandom":true
         },
         {
-            "name": "256true45",
-            "TL": [true, true, false, true, true, false, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false, false, true, true, false, false, true, true, true, false, true, true, false, true, true],
-            "inRandom": true
+            "Name":"256true45",
+            "TL":[true,true,false,true,true,false,true,true,false,true,true,false,true,true,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,true,true,false,false,true,true,true,false,true,true,false,true,true],
+            "InRandom":true
         },
         {
-            "name": "6true2true55",
-            "TL": [true, false, true, true, true, true, true, false, true, true, false, false, false, false, true, true, false, true, true, false, true, false, true, true, false, false, false, false, true, false, true, true, false, true, true, true, false, true, true, false, true, true],
-            "inRandom": true
+            "Name":"6true2true55",
+            "TL":[true,false,true,true,true,true,true,false,true,true,false,false,false,false,true,true,false,true,true,false,true,false,true,true,false,false,false,false,true,false,true,true,false,true,true,true,false,true,true,false,true,true],
+            "InRandom":true
         },
         {
-            "name": "true2546true",
-            "TL": [false, true, true, false, false, false, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false],
-            "inRandom": true
+            "Name":"true2546true",
+            "TL":[false,true,true,false,false,false,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,false,true,true,true,false,true,true,true,true,true,false,true,true,false,false,false,false],
+            "InRandom":true
         },
         {
-            "name": "3456true4",
-            "TL": [true, true, true, true, false, false, true, false, true, true, false, false, true, true, true, false, true, true, false, true, true, true, false, true, true, true, true, true, false, true, true, false, false, false, false, false, true, true, false, false, true, true],
-            "inRandom": true
+            "Name":"3456true4",
+            "TL":[true,true,true,true,false,false,true,false,true,true,false,false,true,true,true,false,true,true,false,true,true,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,true,true,false,false,true,true],
+            "InRandom":true
         },
         {
-            "name": "Alles uit",
-            "TL": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            "inRandom": true
+            "Name":"Alles uit",
+            "TL":[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+            "InRandom":true
         },
         {
-            "name": "Alles aan",
-            "TL": [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
-            "inRandom": true
+            "Name":"Alles aan",
+            "TL":[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],
+            "InRandom":true
         },
         {
-            "name": "8====D",
-            "TL": [true, true, true, true, true, true, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, true, false, false, false, true, true],
-            "inRandom": true
+            "Name":"8====D",
+            "TL":[true,true,true,true,true,true,true,true,false,false,false,false,false,true,true,false,false,false,false,false,true,true,false,false,false,false,false,true,true,false,false,false,false,false,true,true,true,false,false,false,true,true],
+            "InRandom":true
         },
         {
-            "name": "Yochem",
-            "TL": [true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, true, false, true, false, false, false, false, false, true, true, false, false, false, false, false, true, true, true, false, false, false, true, true],
-            "inRandom": true
+            "Name":"Yochem",
+            "TL":[true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,false,false,false,false,false,true,true,false,false,false,false,false,true,true,true,false,false,false,true,true],
+            "InRandom":true
+        },
+        {
+            "Name":"cool",
+            "TL":[false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true],
+            "InRandom":true
+        },
+        {
+            "Name":"jord",
+            "TL":[false,true,true,true,false,false,false,true,true,true,true,true,true,false,true,false,false,false,true,true,false,false,true,true,true,true,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+            "InRandom":true
         }
     ],
-    "selected": "Yochem"
+    "Selected":"Yochem"
 }
