@@ -259,6 +259,12 @@ button {
   margin-top: 60px;
   position: fixed;
   bottom: 100px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+}
+
+#createNew:hover {
+    background-color: #D6D6D6;
 }
 
 ul {

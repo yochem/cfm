@@ -3,17 +3,17 @@
         {
             "Name":"3256true4",
             "TL":[true,true,true,true,false,false,true,true,true,false,true,true,false,true,true,false,true,true,false,true,true,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,true,true,false,false,true,true],
-            "InRandom":true
+            "InRandom": false
         },
         {
             "Name":"true23456",
             "TL":[false,true,true,false,false,false,false,true,true,false,true,true,false,true,true,true,true,true,false,false,true,false,true,true,false,false,true,true,true,false,true,true,false,true,true,true,false,true,true,true,true,true],
-            "InRandom":true
+            "InRandom": false
         },
         {
             "Name":"256true45",
             "TL":[true,true,false,true,true,false,true,true,false,true,true,false,true,true,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,true,true,false,false,true,true,true,false,true,true,false,true,true],
-            "InRandom":true
+            "InRandom": false
         },
         {
             "Name":"6true2true55",
