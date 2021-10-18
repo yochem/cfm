@@ -75,6 +75,21 @@ func homePage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	tmpl.Execute(w, CFM)
 }
 
+func createPage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
+	tmpl := template.Must(template.ParseFiles("templates/create.tmpl"))
+
+	if r.Method != http.MethodPost {
+		tmpl.Execute(w, CFM)
+		return
+	}
+
+	// TODO: do something with new value
+	val := r.FormValue("settings")
+	CFM.Selected = val
+	InfoLogger.Printf("New mode selected: %s\n", val)
+	tmpl.Execute(w, CFM)
+}
+
 func logPage(w http.ResponseWriter, _ *auth.AuthenticatedRequest) {
 	tmpl := template.Must(template.ParseFiles("templates/log.tmpl"))
 	content, err := ioutil.ReadFile("logs.txt")
@@ -113,7 +128,6 @@ func receiveNewArtwork(w http.ResponseWriter, r *http.Request) {
 
 	var art Artwork
 	err := json.NewDecoder(r.Body).Decode(&art)
-	art.InRandom = true
 
 	if err != nil {
 		WarningLogger.Printf("JSON decode error: %s\n", err)
@@ -122,6 +136,24 @@ func receiveNewArtwork(w http.ResponseWriter, r *http.Request) {
 
 	InfoLogger.Printf("Received new artwork: %s\n", art.Name)
 	CFM.Artworks = append(CFM.Artworks, art)
+	writeArtworks("./artworks.json")
+}
+
+func receiveAllArtworks(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		w.WriteHeader(403)
+		w.Write([]byte("403 Forbidden"))
+		return
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&CFM.Artworks)
+
+	if err != nil {
+		WarningLogger.Printf("JSON decode error: %s\n", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	InfoLogger.Println("Received all artworks")
 	writeArtworks("./artworks.json")
 }
 
@@ -159,11 +191,12 @@ func main() {
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./public/js"))))
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./public/css"))))
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("./public/img"))))
-	http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("./public/html"))))
 
 	http.HandleFunc("/", authenticator.Wrap(homePage))
+	http.HandleFunc("/create", authenticator.Wrap(createPage))
 	http.HandleFunc("/log", authenticator.Wrap(logPage))
 	http.HandleFunc("/setpw", authenticator.Wrap(setPasswordPage))
 	http.HandleFunc("/ajax", receiveNewArtwork)
+	http.HandleFunc("/ajax2", receiveAllArtworks)
 	http.ListenAndServe(":80", nil)
 }

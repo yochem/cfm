@@ -43,7 +43,7 @@ document.addEventListener("keyup", function(event) {
 // These klik* functions are run when the buttons in create.html are clicked
 // They bind by using the onclick attribute in the html (create.html:75)
 function klikNone() {
-    let tlIsOn = [];
+    tlIsOn = [];
     for (element of elements) {
         element.classList.replace('on', 'off');
         tlIsOn.push(false);
@@ -52,7 +52,7 @@ function klikNone() {
 }
 
 function klikAll() {
-    let tlIsOn = [];
+    tlIsOn = [];
     for (element of elements) {
         element.classList.replace('off', 'on');
         tlIsOn.push(true);
@@ -63,17 +63,25 @@ function klikAll() {
 function klikSend() {
     naam = document.querySelector('input').value;
     while (naam.length < 2 || naam.length > 15) {
-        var naam = prompt('Tussen 2 en 15 tekens');
+        var naam = prompt('De naam moet tussen de 2 en 15 tekens zijn.');
+    }
+    let alreadyUsedNames = artworks.map(a => a.Name);
+    while (alreadyUsedNames.includes(naam)) {
+        var naam = prompt('Naam bestaat al, kies een andere naam.');
+    }
+    if (!naam) {
+      return;
     }
     sendSettings({
         Name: naam,
-        TL: tlIsOn
+        TL: tlIsOn,
+        InRandom: true
     });
     document.querySelector('input').value = '';
 }
 
 function klikNegative() {
-    let tlIsOn = [];
+    tlIsOn = [];
     for (element of elements) {
         if (element.classList.contains('off')) {
             element.classList.replace('off', 'on');
