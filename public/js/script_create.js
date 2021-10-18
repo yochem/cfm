@@ -9,9 +9,7 @@ for (element of elements) {
     tlIsOn.push(false);
 }
 
-klikEnMouseOver()
-
-function tlMouseOver(){
+function tlMouseOver() {
     if (this.classList.contains('off')) {
         this.classList.replace('off', 'on');
         var tl_id = this.id.substring(1, 3);
@@ -37,98 +35,54 @@ function switchTL() {
 
 document.addEventListener("keyup", function(event) {
     if (event.code === 'Enter') {
-      klikSend();
+        klikSend();
     }
 });
 
-function klikEnMouseOver(){
-  document.querySelector('button[id=send]').addEventListener('click', klikSend);
-  document.querySelector('button[id=none]').addEventListener('click', klikNone);
-  document.querySelector('button[id=all]').addEventListener('click', klikAll);
-  document.querySelector('button[id=negative]').addEventListener('click', klikNegative);
-  document.querySelector('button[id=send]').addEventListener('mouseover', pointerMuis);
-  document.querySelector('button[id=none]').addEventListener('mouseover', pointerMuis);
-  document.querySelector('button[id=all]').addEventListener('mouseover', pointerMuis);
-  document.querySelector('button[id=send]').addEventListener('mouseover', mouseOverKnop1);
-  document.querySelector('button[id=send]').addEventListener('mouseout', mouseOutKnop1);
-  document.querySelector('button[id=none]').addEventListener('mouseover', mouseOverKnop2);
-  document.querySelector('button[id=none]').addEventListener('mouseout', mouseOutKnop2);
-  document.querySelector('button[id=all]').addEventListener('mouseover', mouseOverKnop2);
-  document.querySelector('button[id=all]').addEventListener('mouseout', mouseOutKnop2);
-  document.querySelector('button[id=negative]').addEventListener('mouseover', mouseOverKnop2);
-  document.querySelector('button[id=negative]').addEventListener('mouseout', mouseOutKnop2);
-  document.querySelector('a[id=back]').addEventListener('mouseover', mouseOverKnop3);
-  document.querySelector('a[id=back]').addEventListener('mouseout', mouseOutKnop3);
 
-  function pointerMuis(){
-    this.style.cursor = 'pointer';
-  }
-
-  function mouseOverKnop1(){
-    this.style.background = '#D6D6D6';
-  }
-
-  function mouseOutKnop1(){
-    this.style.background = '#FFFFFF';
-  }
-
-  function mouseOverKnop2(){
-    this.style.background = '#FFFFFF';
-    this.style.color = '#000000'
-  }
-
-  function mouseOutKnop2(){
-    this.style.background = '#000000';
-    this.style.color = '#FFFFFF'
-  }
-
-  function mouseOverKnop3(){
-    this.style.color = '#7A7A7A';
-  }
-
-  function mouseOutKnop3(){
-    this.style.color = '#555555';
-  }
-
-  function klikNone(){
+// These klik* functions are run when the buttons in create.html are clicked
+// They bind by using the onclick attribute in the html (create.html:75)
+function klikNone() {
     let tlIsOn = [];
     for (element of elements) {
-      element.classList.replace('on', 'off');
-      tlIsOn.push(false);
-    }
-    document.querySelector('input').value = '';
-  }
-
-  function klikAll(){
-    let tlIsOn = [];
-    for (element of elements) {
-      element.classList.replace('off', 'on');
-      tlIsOn.push(true);
-    }
-    document.querySelector('input').value = '';
-  }
-
-  function klikSend(){
-    naam = document.querySelector('input').value;
-    while (naam.length < 2 || naam.length > 15) {
-      var naam = prompt('Tussen 2 en 15 tekens');
-    }
-    sendSettings({Name: naam, TL: tlIsOn});
-    document.querySelector('input').value = '';
-  }
-
-  function klikNegative(){
-    let tlIsOn = [];
-    for (element of elements) {
-      if (element.classList.contains('off')) {
-        element.classList.replace('off', 'on');
-        tlIsOn.push(true);
-      } else {
         element.classList.replace('on', 'off');
         tlIsOn.push(false);
+    }
+    document.querySelector('input').value = '';
+}
+
+function klikAll() {
+    let tlIsOn = [];
+    for (element of elements) {
+        element.classList.replace('off', 'on');
+        tlIsOn.push(true);
+    }
+    document.querySelector('input').value = '';
+}
+
+function klikSend() {
+    naam = document.querySelector('input').value;
+    while (naam.length < 2 || naam.length > 15) {
+        var naam = prompt('Tussen 2 en 15 tekens');
+    }
+    sendSettings({
+        Name: naam,
+        TL: tlIsOn
+    });
+    document.querySelector('input').value = '';
+}
+
+function klikNegative() {
+    let tlIsOn = [];
+    for (element of elements) {
+        if (element.classList.contains('off')) {
+            element.classList.replace('off', 'on');
+            tlIsOn.push(true);
+        } else {
+            element.classList.replace('on', 'off');
+            tlIsOn.push(false);
         }
     }
-  }
 }
 
 function sendSettings(data) {

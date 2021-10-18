@@ -22,6 +22,10 @@ header {
   left: 12px;
 }
 
+#back:hover {
+  color: #7A7A7A;
+}
+
 #matrix {
   width: 1100px;
   height: 315px;
@@ -119,6 +123,11 @@ button {
   width: 425px;
 }
 
+#send:hover {
+  cursor: pointer;
+  background-color: #D6D6D6;
+}
+
 #none, #all {
   margin-right: 13px;
 }
@@ -130,6 +139,12 @@ button {
   font-weight: 300;
   font-size: 15px;
   width: 130px;
+}
+
+#all:hover, #none:hover, #negative:hover {
+  cursor: pointer;
+  background-color: #FFFFFF;
+  color: #000000;
 }
 
 #negative {
@@ -299,4 +314,13 @@ img {
 .check {
   transform: scale(180%);
   width: 100px;
+}
+
+li > label {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
