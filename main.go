@@ -2,14 +2,20 @@ package main
 
 import (
 	"encoding/json"
-	auth "github.com/abbot/go-http-auth"
-	"golang.org/x/crypto/bcrypt"
+	"errors"
+	"fmt"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
+	"time"
+
+	auth "github.com/abbot/go-http-auth"
+	"github.com/huin/goserial"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Artwork struct {
@@ -20,7 +26,11 @@ type Artwork struct {
 
 type Settings struct {
 	Artworks []Artwork
-	Selected string
+	// default mode will be 'random' which will randomly show artworks where
+	// InRandom is true. Other values might be 'time' which will show the time
+	// and 'countdown' for NYE.
+	Mode string
+	TimeDisplayTime int // how many seconds the current time is shown during random
 }
 
 type Config struct {
@@ -33,6 +43,7 @@ var (
 	InfoLogger    *log.Logger
 	CFM           Settings
 	DATA_FILE     string
+	Serial        io.ReadWriteCloser
 )
 
 func init() {
@@ -48,8 +59,81 @@ func init() {
 	InfoLogger.Println("===============================================")
 	InfoLogger.Println("Server started")
 
-	loadArtworks("./artworks.json")
+	const DATA_FILE = "./artworks.json"
+	loadArtworks(DATA_FILE)
+
+	arduinoPath, _ := FindArduinoDevice()
+	serialConfig := &goserial.Config{Name: arduinoPath, Baud: 9600}
+	Serial, _ = goserial.OpenPort(serialConfig)
+
+	time.Sleep(2 * time.Second)
+
+	/* for i := 0; i < 9; i++ {
+		s := fmt.Sprintf("%d%d%d%d%d%d%d%d%d%d", i, i+1, i, i+1, i, i+1, i, i+1, i, i+1)
+		fmt.Println(s)
+		f, _ := Serial.Write([]byte(s))
+		fmt.Println(f)
+		time.Sleep(5 * time.Second)
+	}
+	Serial.Close() */
+	bytz := CFMToBytes()
+	x := make([]byte, 2048)
+	Serial.Write(bytz)
+	for {
+		n, _ := Serial.Read(x)
+		fmt.Println(string(x[:n]))
+		time.Sleep(8 * time.Second);
+	}
 }
+
+
+/******************************************************************************
+ARDUINO PART
+*******************************************************************************/
+
+func FindArduinoDevice() (string, error) {
+	contents, _ := ioutil.ReadDir("/dev")
+
+	for _, f := range contents {
+		if strings.Contains(f.Name(), "tty.usb") ||
+			strings.Contains(f.Name(), "ttyUSB") {
+			InfoLogger.Println("Arduino found: /dev/" + f.Name())
+			return "/dev/" + f.Name(), nil
+		}
+	}
+	ErrorLogger.Println("can't find Arduino device in /dev/")
+	return "", errors.New("can't find Arduino device in /dev/")
+}
+
+
+func CFMToBytes() []byte {
+	var message strings.Builder
+
+	// config line
+	s := fmt.Sprintf("%s|%d|", CFM.Mode, CFM.TimeDisplayTime)
+	message.WriteString(s)
+
+	for i, artwork := range CFM.Artworks {
+		if artwork.InRandom {
+			for _, tl := range artwork.TL {
+				if tl {
+					message.WriteString("1")
+				} else {
+					message.WriteString("0")
+				}
+			}
+			if i != len(CFM.Artworks) - 1 {
+				message.WriteString("|")
+			}
+		}
+	}
+	fmt.Println(message.String());
+	return []byte(message.String())
+}
+
+/******************************************************************************
+WEBSERVER PART
+*******************************************************************************/
 
 func Secret(user, _ string) string {
 	if user == "jord" {
@@ -70,7 +154,7 @@ func homePage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 
 	// TODO: do something with new value
 	val := r.FormValue("settings")
-	CFM.Selected = val
+	CFM.Mode = val
 	InfoLogger.Printf("New mode selected: %s\n", val)
 	tmpl.Execute(w, CFM)
 }
@@ -85,7 +169,7 @@ func createPage(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 
 	// TODO: do something with new value
 	val := r.FormValue("settings")
-	CFM.Selected = val
+	CFM.Mode = val
 	InfoLogger.Printf("New mode selected: %s\n", val)
 	tmpl.Execute(w, CFM)
 }
@@ -136,7 +220,7 @@ func receiveNewArtwork(w http.ResponseWriter, r *http.Request) {
 
 	InfoLogger.Printf("Received new artwork: %s\n", art.Name)
 	CFM.Artworks = append(CFM.Artworks, art)
-	writeArtworks("./artworks.json")
+	writeArtworks(DATA_FILE)
 }
 
 func receiveAllArtworks(w http.ResponseWriter, r *http.Request) {
@@ -154,7 +238,7 @@ func receiveAllArtworks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	InfoLogger.Println("Received all artworks")
-	writeArtworks("./artworks.json")
+	writeArtworks(DATA_FILE)
 }
 
 func writeArtworks(filepath string) {
@@ -169,6 +253,7 @@ func writeArtworks(filepath string) {
 }
 
 func loadArtworks(filepath string) {
+	// load artworks from file, happens at initalization
 	fileContent, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		ErrorLogger.Printf("Not able to read artworks JSON: %s\n", err)
