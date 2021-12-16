@@ -385,5 +385,7 @@
             "InRandom": true
         }
     ],
-    "Mode": "random"
+    "Mode": "random",
+    "TimeDisplayTime": 11,
+    "RandomDisplayTime": 11
 }

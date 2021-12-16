@@ -31,6 +31,7 @@ type Settings struct {
 	// and 'countdown' for NYE.
 	Mode string
 	TimeDisplayTime int // how many seconds the current time is shown during random
+	RandomDisplayTime int // how many seconds the random artwork is shown
 }
 
 type Config struct {
@@ -68,22 +69,9 @@ func init() {
 
 	time.Sleep(2 * time.Second)
 
-	/* for i := 0; i < 9; i++ {
-		s := fmt.Sprintf("%d%d%d%d%d%d%d%d%d%d", i, i+1, i, i+1, i, i+1, i, i+1, i, i+1)
-		fmt.Println(s)
-		f, _ := Serial.Write([]byte(s))
-		fmt.Println(f)
-		time.Sleep(5 * time.Second)
-	}
-	Serial.Close() */
-	bytz := CFMToBytes()
-	x := make([]byte, 2048)
-	Serial.Write(bytz)
-	for {
-		n, _ := Serial.Read(x)
-		fmt.Println(string(x[:n]))
-		time.Sleep(8 * time.Second);
-	}
+	// bytz := CFMToBytes()
+	CFMToBytes()
+	// Serial.Write(bytz)
 }
 
 
@@ -109,22 +97,30 @@ func FindArduinoDevice() (string, error) {
 func CFMToBytes() []byte {
 	var message strings.Builder
 
-	// config line
-	s := fmt.Sprintf("%s|%d|", CFM.Mode, CFM.TimeDisplayTime)
-	message.WriteString(s)
+	artworksInRandom := []Artwork{}
 
 	for i, artwork := range CFM.Artworks {
 		if artwork.InRandom {
-			for _, tl := range artwork.TL {
-				if tl {
-					message.WriteString("1")
-				} else {
-					message.WriteString("0")
-				}
+			artworksInRandom = append(artworksInRandom, CFM.Artworks[i])
+		}
+	}
+
+	randoms := len(artworksInRandom)
+
+	// config line
+	s := fmt.Sprintf("%s|%d|%d|%d|", CFM.Mode, CFM.TimeDisplayTime, CFM.RandomDisplayTime, randoms)
+	message.WriteString(s)
+
+	for i, artwork := range artworksInRandom {
+		num := int64(0)
+		for i, tl := range artwork.TL {
+			if tl {
+				num |= 1 << (i);
 			}
-			if i != len(CFM.Artworks) - 1 {
-				message.WriteString("|")
-			}
+		}
+		message.WriteString(fmt.Sprintf("%d", num))
+		if i != randoms - 1 {
+			message.WriteString("|")
 		}
 	}
 	fmt.Println(message.String());
