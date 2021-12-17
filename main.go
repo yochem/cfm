@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"math/rand"
 	"fmt"
 	"html/template"
 	"io"
@@ -29,8 +30,8 @@ type Settings struct {
 	// default mode will be 'random' which will randomly show artworks where
 	// InRandom is true. Other values might be 'time' which will show the time
 	// and 'countdown' for NYE.
-	Mode string
-	TimeDisplayTime int // how many seconds the current time is shown during random
+	Mode              string
+	TimeDisplayTime   int // how many seconds the current time is shown during random
 	RandomDisplayTime int // how many seconds the random artwork is shown
 }
 
@@ -63,21 +64,74 @@ func init() {
 	const DATA_FILE = "./artworks.json"
 	loadArtworks(DATA_FILE)
 
-	arduinoPath, _ := FindArduinoDevice()
+	arduinoPath, err := FindArduinoDevice()
+	if err != nil {
+		fmt.Println("Can't find Arduino!")
+	}
 	serialConfig := &goserial.Config{Name: arduinoPath, Baud: 9600}
-	Serial, _ = goserial.OpenPort(serialConfig)
+	Serial, err = goserial.OpenPort(serialConfig)
+	if err != nil {
+		fmt.Println(err)
+	}
 
+	// needed for establishing the serial connection
 	time.Sleep(2 * time.Second)
 
-	// bytz := CFMToBytes()
 	CFMToBytes()
-	// Serial.Write(bytz)
+	startLoop()
 }
-
 
 /******************************************************************************
 ARDUINO PART
 *******************************************************************************/
+var quit chan struct{}
+
+func sendRandomArtwork(artworks []Artwork) {
+	var message strings.Builder
+	randomIndex := rand.Intn(len(artworks))
+	for _, mode := range artworks[randomIndex].TL {
+		if mode {
+			message.WriteString("1")
+		} else {
+			message.WriteString("0")
+		}
+	}
+
+	Serial.Write([]byte(message.String()))
+}
+
+func startLoop() {
+	quit = make(chan struct{})
+	go loop()
+}
+
+func stopLoop() {
+	quit <- struct{}{}
+}
+
+func loop() {
+	// This ticker will put something in its channel every 2s
+	ticker := time.NewTicker(2 * time.Second)
+	// If you don't stop it, the ticker will cause memory leaks
+	defer ticker.Stop()
+
+	artworksInRandom := []Artwork{}
+
+	for i, artwork := range CFM.Artworks {
+		if artwork.InRandom {
+			artworksInRandom = append(artworksInRandom, CFM.Artworks[i])
+		}
+	}
+
+	for {
+		select {
+		case <-quit:
+			return
+		case <-ticker.C:
+			sendRandomArtwork(artworksInRandom)
+		}
+	}
+}
 
 func FindArduinoDevice() (string, error) {
 	contents, _ := ioutil.ReadDir("/dev")
@@ -92,7 +146,6 @@ func FindArduinoDevice() (string, error) {
 	ErrorLogger.Println("can't find Arduino device in /dev/")
 	return "", errors.New("can't find Arduino device in /dev/")
 }
-
 
 func CFMToBytes() []byte {
 	var message strings.Builder
@@ -115,15 +168,14 @@ func CFMToBytes() []byte {
 		num := int64(0)
 		for i, tl := range artwork.TL {
 			if tl {
-				num |= 1 << (i);
+				num |= 1 << (i)
 			}
 		}
 		message.WriteString(fmt.Sprintf("%d", num))
-		if i != randoms - 1 {
+		if i != randoms-1 {
 			message.WriteString("|")
 		}
 	}
-	fmt.Println(message.String());
 	return []byte(message.String())
 }
 
@@ -216,6 +268,11 @@ func receiveNewArtwork(w http.ResponseWriter, r *http.Request) {
 
 	InfoLogger.Printf("Received new artwork: %s\n", art.Name)
 	CFM.Artworks = append(CFM.Artworks, art)
+
+	// ensures that the arduino is updated
+	stopLoop()
+	startLoop()
+
 	writeArtworks(DATA_FILE)
 }
 
@@ -227,6 +284,10 @@ func receiveAllArtworks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&CFM.Artworks)
+
+	// ensures that the arduino is updated
+	stopLoop()
+	startLoop()
 
 	if err != nil {
 		WarningLogger.Printf("JSON decode error: %s\n", err)
@@ -244,7 +305,7 @@ func writeArtworks(filepath string) {
 		return
 	}
 
-	ioutil.WriteFile(filepath, jsonString, os.ModePerm)
+	ioutil.WriteFile(filepath, jsonString, 0644)
 	InfoLogger.Println("wrote new data to JSON file")
 }
 

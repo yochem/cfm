@@ -71,7 +71,6 @@ function sendCheckboxClick(e) {
         this.checked = e.getAttribute('checked') === '';
     }
     this.checked = !this.checked;
-    console.log(this.checked);
 
     let name = e.getAttribute('name');
     let nameList = artworks.map(a => a.Name);
