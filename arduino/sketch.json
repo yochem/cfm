@@ -1,6 +1,0 @@
-{
-  "cpu": {
-    "fqbn": "arduino:avr:mega",
-    "port": ""
-  }
-}

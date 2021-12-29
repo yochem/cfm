@@ -19,24 +19,38 @@ RTC_DS3231 rtc;
 #define TL_PER_DIGIT 7
 #define  NUM_DIGITS 6
 #define TL_COUNT 42
-/* const int pins[TL_COUNT] = {
-     7,  1,  2,  3,  4,  5,  6,
-     8,  9, 10, 11, 12, 13, 14,
-    22, 23, 24, 25, 26, 27, 28,
-    29, 30, 31, 32, 33, 34, 35,
-    36, 37, 38, 39, 40, 41, 42,
-    43, 44, 45, 46, 47, 48, 49,
-}; */
 const int pins[TL_COUNT] = {
-    22, 23, 24, 25, 26, 27, 28,
-    29, 30, 31, 32, 33, 34, 35,
-    36, 37, 38, 39, 40, 41, 42,
-    43, 44, 45, 46, 47, 48, 49,
-    50, 51, 52, 53, 54, 55, 56,
-    57, 58, 59, 51, 52,  1,  2
+     7,  1,  2,  3,  4,  5,  6,
+    10, 11, 14, 13,  8, 12,  9,
+    28, 27, 25, 24, 26, 22, 23,
+    33, 32, 35, 29, 34, 31, 30,
+    43, 49, 45, 47, 44, 46, 48,
+    39, 42, 41, 36, 37, 40, 38
 };
 
 int timeDisplayTime = 10;
+
+
+void flash2022() {
+    int *onOffs;
+    for (int i = 0; i < 10; i++) {
+        onOffs = numberToArray(2);
+        displayOneDigit(onOffs, 1);
+
+        onOffs = numberToArray(0);
+        displayOneDigit(onOffs, 2);
+
+        onOffs = numberToArray(2);
+        displayOneDigit(onOffs, 3);
+
+        onOffs = numberToArray(2);
+        displayOneDigit(onOffs, 4);
+
+        delay(1000);
+    }
+
+    delay(14400000);
+}
 
 int *numberToArray(int num) {
     /*
@@ -86,7 +100,6 @@ void displayTime() {
     for (char s = 0; s < strlen(nums); s++) {
         // magic to convert '9' (char) --> 9 (int)
         number = nums[s] - '0';
-        Serial.print(number);
         onOffs = numberToArray(number);
         displayOneDigit(onOffs, s);
     }
@@ -117,10 +130,46 @@ void displayAllDigits(int *onOffs) {
     }
 }
 
-int newMinute() {
+int isNewMinute() {
     char nums[2] = "ss";
     rtc.now().toString(nums);
     return atoi(nums) < 10;
+}
+
+int isNewYear() {
+    DateTime now = rtc.now();
+
+    return now.month() == 12 && now.day() == 31 && now.hour() == 23 && now.minute() > 45;
+}
+
+void displayCountdown() {
+    DateTime now = rtc.now();
+    int month = now.month();
+    int day = now.day();
+    int hour = now.hour();
+    int minute = now.minute();
+    int second = now.second();
+    int diffMinute = 60 - minute;
+    int diffSeconds = 0;
+
+    // all cases for when seconds are nonzero
+    if (second > 0) {
+        diffMinute--;
+        diffSeconds = 60 - second;
+    }
+
+    int *onOffs;
+
+    char nums[4];
+    sprintf(nums, "%02d%02d", diffMinute, diffSeconds);
+    Serial.println(nums);
+
+    for (int i = 0; i < 4; i++) {
+        // magic to convert '9' (char) --> 9 (int)
+        int number = nums[i] - '0';
+        onOffs = numberToArray(number);
+        displayOneDigit(onOffs, i);
+    }
 }
 
 void setup() {
@@ -140,10 +189,18 @@ void setup() {
         /* pinMode(pins[i], OUTPUT); */
         digitalWrite(pins[i], LOW);
     }
+    rtc.adjust(DateTime(2021, 12, 31, 23, 58, 50));
 }
 
 void loop() {
-    if (newMinute()) {
+
+    while (isNewYear()) {
+        displayCountdown();
+        delay(1000);
+    }
+    flash2022();
+
+    if (isNewMinute()) {
         displayTime();
         delay(timeDisplayTime);
     }
@@ -190,7 +247,6 @@ void loop() {
         for (int i = 0; input[i] != '\0'; i++) {
             onOffs[i] = input[i] - '0';
         }
-        displayOneDigit(onOffs, 0);
-        /* displayAllDigits(onOffs); */
+        displayAllDigits(onOffs);
     }
 }

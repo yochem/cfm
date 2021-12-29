@@ -71,7 +71,8 @@ func init() {
 	serialConfig := &goserial.Config{Name: arduinoPath, Baud: 9600}
 	Serial, err = goserial.OpenPort(serialConfig)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("Serial port not opening: %v\n", err)
+		return;
 	}
 
 	// needed for establishing the serial connection
