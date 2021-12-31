@@ -139,6 +139,7 @@ func FindArduinoDevice() (string, error) {
 
 	for _, f := range contents {
 		if strings.Contains(f.Name(), "tty.usb") ||
+			strings.Contains(f.Name(), "ttyACM") ||
 			strings.Contains(f.Name(), "ttyUSB") {
 			InfoLogger.Println("Arduino found: /dev/" + f.Name())
 			return "/dev/" + f.Name(), nil

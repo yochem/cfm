@@ -1,12 +1,3 @@
-/* NOTES:
- *
- * - On relayboard, switch HIGH and LOW
- * - pinmode output
- * - Test RTC
- * - set time rtc better
- * - order pins
- * -
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,8 +7,10 @@
 
 RTC_DS3231 rtc;
 
+#define TL_ON LOW
+#define TL_OFF HIGH
 #define TL_PER_DIGIT 7
-#define  NUM_DIGITS 6
+#define NUM_DIGITS 6
 #define TL_COUNT 42
 const int pins[TL_COUNT] = {
      7,  1,  2,  3,  4,  5,  6,
@@ -116,7 +109,7 @@ void displayOneDigit(int *onOffs, int location) {
 
     int mode;
     for (int i = 0; i < TL_PER_DIGIT; i++) {
-        mode = (onOffs[i] == 1) ? HIGH : LOW;
+        mode = (onOffs[i] == 1) ? TL_ON : TL_OFF;
         digitalWrite(pins[startPinIndex + i], mode);
     }
 }
@@ -125,7 +118,7 @@ void displayAllDigits(int *onOffs) {
     int mode;
     // for displaying all 42 tl's
     for (int i = 0; i < TL_COUNT; i++) {
-        mode = (onOffs[i] == 1) ? HIGH : LOW;
+        mode = (onOffs[i] == 1) ? TL_ON : TL_OFF;
         digitalWrite(pins[i], mode);
     }
 }
@@ -186,19 +179,21 @@ void setup() {
 
     for (int i = 0; i < sizeof pins / sizeof (int); i++) {
         // TODO: probably needed for TL's
-        /* pinMode(pins[i], OUTPUT); */
-        digitalWrite(pins[i], LOW);
+        pinMode(pins[i], OUTPUT);
+        digitalWrite(pins[i], TL_OFF);
     }
     rtc.adjust(DateTime(2021, 12, 31, 23, 58, 50));
 }
 
 void loop() {
 
-    while (isNewYear()) {
-        displayCountdown();
-        delay(1000);
+    if (isNewYear()) {
+        while (isNewYear()) {
+            displayCountdown();
+            delay(1000);
+        }
+        flash2022();
     }
-    flash2022();
 
     if (isNewMinute()) {
         displayTime();
