@@ -342,5 +342,5 @@ func main() {
 	http.HandleFunc("/setpw", authenticator.Wrap(setPasswordPage))
 	http.HandleFunc("/ajax", receiveNewArtwork)
 	http.HandleFunc("/ajax2", receiveAllArtworks)
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":4567", nil)
 }

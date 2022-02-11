@@ -24,27 +24,6 @@ const int pins[TL_COUNT] = {
 int timeDisplayTime = 10;
 
 
-void flash2022() {
-    int *onOffs;
-    for (int i = 0; i < 10; i++) {
-        onOffs = numberToArray(2);
-        displayOneDigit(onOffs, 1);
-
-        onOffs = numberToArray(0);
-        displayOneDigit(onOffs, 2);
-
-        onOffs = numberToArray(2);
-        displayOneDigit(onOffs, 3);
-
-        onOffs = numberToArray(2);
-        displayOneDigit(onOffs, 4);
-
-        delay(1000);
-    }
-
-    delay(14400000);
-}
-
 int *numberToArray(int num) {
     /*
             0
@@ -96,7 +75,6 @@ void displayTime() {
         onOffs = numberToArray(number);
         displayOneDigit(onOffs, s);
     }
-    Serial.println("");
 }
 
 void displayOneDigit(int *onOffs, int location) {
@@ -129,42 +107,6 @@ int isNewMinute() {
     return atoi(nums) < 10;
 }
 
-int isNewYear() {
-    DateTime now = rtc.now();
-
-    return now.month() == 12 && now.day() == 31 && now.hour() == 23 && now.minute() > 45;
-}
-
-void displayCountdown() {
-    DateTime now = rtc.now();
-    int month = now.month();
-    int day = now.day();
-    int hour = now.hour();
-    int minute = now.minute();
-    int second = now.second();
-    int diffMinute = 60 - minute;
-    int diffSeconds = 0;
-
-    // all cases for when seconds are nonzero
-    if (second > 0) {
-        diffMinute--;
-        diffSeconds = 60 - second;
-    }
-
-    int *onOffs;
-
-    char nums[4];
-    sprintf(nums, "%02d%02d", diffMinute, diffSeconds);
-    Serial.println(nums);
-
-    for (int i = 0; i < 4; i++) {
-        // magic to convert '9' (char) --> 9 (int)
-        int number = nums[i] - '0';
-        onOffs = numberToArray(number);
-        displayOneDigit(onOffs, i);
-    }
-}
-
 void setup() {
     Serial.begin(9600);
 
@@ -182,18 +124,9 @@ void setup() {
         pinMode(pins[i], OUTPUT);
         digitalWrite(pins[i], TL_OFF);
     }
-    rtc.adjust(DateTime(2021, 12, 31, 23, 58, 50));
 }
 
 void loop() {
-
-    if (isNewYear()) {
-        while (isNewYear()) {
-            displayCountdown();
-            delay(1000);
-        }
-        flash2022();
-    }
 
     if (isNewMinute()) {
         displayTime();
