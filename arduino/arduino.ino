@@ -13,8 +13,8 @@ RTC_DS3231 rtc;
 #define NUM_DIGITS 6
 #define TL_COUNT 42
 const int pins[TL_COUNT] = {
-     7,  1,  2,  3,  4,  5,  6,
-    10, 11, 14, 13,  8, 12,  9,
+     7, 51,  2,  3,  4,  5,  6,
+    10, 11, 14, 50,  8, 12,  9,
     28, 27, 25, 24, 26, 22, 23,
     33, 32, 35, 29, 34, 31, 30,
     43, 49, 45, 47, 44, 46, 48,
@@ -77,6 +77,12 @@ void displayTime() {
     }
 }
 
+void displayOff() {
+    for (int i = 0; i < TL_COUNT; i++) {
+        digitalWrite(pins[i], TL_OFF);
+    }
+}
+
 void displayOneDigit(int *onOffs, int location) {
     // location is index of the display digit group
     if (location < 0 || location > NUM_DIGITS - 1) {
@@ -104,7 +110,7 @@ void displayAllDigits(int *onOffs) {
 int isNewMinute() {
     char nums[2] = "ss";
     rtc.now().toString(nums);
-    return atoi(nums) < 10;
+    return atoi(nums) < 10 || atoi(nums) > 50;
 }
 
 void setup() {
@@ -126,11 +132,21 @@ void setup() {
     }
 }
 
+int isNight() {
+    int hour = rtc.now().hour();
+    return 1 < hour && hour < 16;
+}
+
 void loop() {
+
+    if (isNight()) {
+        displayOff();
+        delay(100000);
+        return;
+    }
 
     if (isNewMinute()) {
         displayTime();
-        delay(timeDisplayTime);
     }
 
     String inputString = Serial.readString();
