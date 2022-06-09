@@ -8,7 +8,7 @@ located at the Tramkade, Den Bosch.
 
 ## The C.F.M.
 
-TODO
+![CFM](public/img/cfm.jpg)
 
 
 ## Web UI
