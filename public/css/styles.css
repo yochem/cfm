@@ -285,6 +285,44 @@ button {
   cursor: pointer;
 }
 
+#startCountdown {
+  margin-left: 50px;
+  margin-top: 60px;
+  position: fixed;
+  bottom: 100px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+}
+
+#startCountdown{
+  margin-left: 350px;
+  width: auto;
+  background-color: #000000;
+}
+
+#countdownKnop:hover {
+    background-color: #D6D6D6;
+}
+
+#inputCountdown {
+  border-style: solid;
+  border-width: 1px;
+  width: 110px;
+  height: 53px;
+  font-family: Fira Code;
+  font-size: 13pt;
+  margin-top: 13px;
+  text-align: center;
+}
+
+#countdownKnop {
+  width: auto;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+
+
 #createNew:hover {
     background-color: #D6D6D6;
 }

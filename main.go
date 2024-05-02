@@ -328,6 +328,10 @@ func loadArtworks(filepath string) {
 	InfoLogger.Println("succesfully loaded in artworks from JSON")
 }
 
+func showCountdown(w http.ResponseWriter, r *http.Request) {
+	println("hi")
+}
+
 func main() {
 	authenticator := auth.NewBasicAuthenticator("example.com", Secret)
 
@@ -342,5 +346,6 @@ func main() {
 	http.HandleFunc("/setpw", authenticator.Wrap(setPasswordPage))
 	http.HandleFunc("/ajax", receiveNewArtwork)
 	http.HandleFunc("/ajax2", receiveAllArtworks)
+	http.HandleFunc("/countdown", showCountdown)
 	http.ListenAndServe(":4567", nil)
 }

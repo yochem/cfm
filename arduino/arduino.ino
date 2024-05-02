@@ -134,14 +134,14 @@ void setup() {
 
 int isNight() {
     int hour = rtc.now().hour();
-    return 1 < hour && hour < 16;
+    return 2 < hour && hour < 18;
 }
 
 void loop() {
 
     if (isNight()) {
         displayOff();
-        delay(100000);
+        delay(5 * 60 * 1000);
         return;
     }
 
