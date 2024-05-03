@@ -1,0 +1,27 @@
+{% for conf in artworks %}
+<li>
+	<label
+		hx-get="/artworks/{{ conf }}"
+		hx-trigger="mouseenter"
+		hx-target="#matrix2"
+	>
+		<input
+			type="checkbox"
+			name="inRandom"
+			hx-put="/artworks/{{ conf }}/inRandom"
+			{% if artworks[conf].in_random %}
+				checked
+			{% endif %}
+		>
+		{{ artworks[conf].display_name }}
+	</label>
+	<input
+		class="delete"
+		type="button"
+		value="×"
+		hx-delete="/artworks/{{ conf }}"
+		hx-target="closest li"
+		hx-swap="outerHTML"
+	>
+</li>
+{% endfor %}

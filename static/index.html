@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>var artworks = {{.Artworks}};</script>
+    <script>var artworks = null;</script>
     <script src="/js/select.js" charset="utf-8" defer></script>
   </head>
   <body id="indexBody">
@@ -82,7 +84,7 @@
     </div>
 
     <div id="kolomRechts">
-        <ul id="artworks">
+        <ul id="artworks" hx-get="/artworks" hx-trigger="load">
         </ul>
     </div>
   </body>
