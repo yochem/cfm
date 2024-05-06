@@ -1,18 +1,19 @@
 import datetime
 import json
 from pathlib import Path
+from typing import Any
 
 
-def load_full():
+def load_full() -> Any:
     with open("artworks.json", "r") as f:
         return json.loads(f.read())
 
 
-def load_artworks():
+def load_artworks() -> Any:
     return load_full()["works"]
 
 
-def save(data, path: str = "artworks.json"):
+def save(data: dict[str, Any], path: str = "artworks.json") -> None:
     save_path = Path(path)
     if save_path.exists():
         # TODO: limit number of backups
@@ -25,7 +26,9 @@ def save(data, path: str = "artworks.json"):
         f.write(json.dumps(data))
 
 
-def add_artwork(num, values, overwrite=False, save_to_file=True):
+def add_artwork(
+    num: int, values: dict[str, Any], overwrite: bool = False, save_to_file: bool = True
+) -> None:
     data = load_full()
 
     if str(num) in data["works"] and not overwrite:
@@ -37,11 +40,11 @@ def add_artwork(num, values, overwrite=False, save_to_file=True):
         save(data)
 
 
-def artwork(num: int):
+def artwork(num: int) -> Any:
     return load_artworks().get(str(num))
 
 
-def remove_artwork(num, save_to_file=True):
+def remove_artwork(num: int, save_to_file: bool = True) -> None:
     data = load_full()
     data["works"].pop(str(num), None)
 

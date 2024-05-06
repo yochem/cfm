@@ -1,91 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Home</title>
-    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>var artworks = null;</script>
-    <script src="/js/select.js" charset="utf-8" defer></script>
-  </head>
-  <body id="indexBody">
+<head>
+  <meta charset="utf-8">
+  <title>Home</title>
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/select-page.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <script src="https://unpkg.com/htmx.org@1.9.12"
+    integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+    crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body id="indexBody">
 
 
 
-    <div id="kolomLinks">
-      <img src="/img/logoCFM.svg" alt="Logo C.F.M.">
-      <div id="matrix2">
-        <div class="digit2" id="first">
-          <div class="tl2 off2 upper2" id="T0"></div>
-          <div class="tl2 off2 upright2" id="T1"></div>
-          <div class="tl2 off2 lowright2" id="T2"></div>
-          <div class="tl2 off2 lower2" id="T3"></div>
-          <div class="tl2 off2 lowleft2" id="T4"></div>
-          <div class="tl2 off2 upleft2" id="T5"></div>
-          <div class="tl2 off2 middle2" id="T6"></div>
-        </div>
-        <div class="digit2" id="second">
-          <div class="tl2 off2 upper2" id="T7"></div>
-          <div class="tl2 off2 upright2" id="T8"></div>
-          <div class="tl2 off2 lowright2" id="T9"></div>
-          <div class="tl2 off2 lower2" id="T10"></div>
-          <div class="tl2 off2 lowleft2" id="T11"></div>
-          <div class="tl2 off2 upleft2" id="T12"></div>
-          <div class="tl2 off2 middle2" id="T13"></div>
-        </div>
-        <div class="digit2" id="third">
-          <div class="tl2 off2 upper2" id="T14"></div>
-          <div class="tl2 off2 upright2" id="T15"></div>
-          <div class="tl2 off2 lowright2" id="T16"></div>
-          <div class="tl2 off2 lower2" id="T17"></div>
-          <div class="tl2 off2 lowleft2" id="T18"></div>
-          <div class="tl2 off2 upleft2" id="T19"></div>
-          <div class="tl2 off2 middle2" id="T20"></div>
-        </div>
-        <div class="digit2" id="fourth">
-          <div class="tl2 off2 upper2" id="T21"></div>
-          <div class="tl2 off2 upright2" id="T22"></div>
-          <div class="tl2 off2 lowright2" id="T23"></div>
-          <div class="tl2 off2 lower2" id="T24"></div>
-          <div class="tl2 off2 lowleft2" id="T25"></div>
-          <div class="tl2 off2 upleft2" id="T26"></div>
-          <div class="tl2 off2 middle2" id="T27"></div>
-        </div>
-        <div class="digit2" id="fifth">
-          <div class="tl2 off2 upper2" id="T28"></div>
-          <div class="tl2 off2 upright2" id="T29"></div>
-          <div class="tl2 off2 lowright2" id="T30"></div>
-          <div class="tl2 off2 lower2" id="T31"></div>
-          <div class="tl2 off2 lowleft2" id="T32"></div>
-          <div class="tl2 off2 upleft2" id="T33"></div>
-          <div class="tl2 off2 middle2" id="T34"></div>
-        </div>
-        <div class="digit2" id="sixth">
-          <div class="tl2 off2 upper2" id="T35"></div>
-          <div class="tl2 off2 upright2" id="T36"></div>
-          <div class="tl2 off2 lowright2" id="T37"></div>
-          <div class="tl2 off2 lower2" id="T38"></div>
-          <div class="tl2 off2 lowleft2" id="T39"></div>
-          <div class="tl2 off2 upleft2" id="T40"></div>
-          <div class="tl2 off2 middle2" id="T41"></div>
-        </div>
-      </div>
-      <a href="/create"><button id="createNew" type="button">Create new</button></a>
-
-      <form id="startCountdown" action="/countdown" method="POST">
-        <button id="countdownKnop" type="submit">Start countcown</button>
-        <input type="time" id="inputCountdown" value="00:00"></input>
-      </form>
+  <div id="kolomLinks">
+    <img src="/img/logoCFM.svg" alt="Logo C.F.M.">
+    <div id="matrix" hx-get="/artworks/0" hx-trigger="load">
     </div>
+    <a href="/create.html"><button class="important" id="createNew" type="button">Create new</button></a>
 
-    <div id="kolomRechts">
-        <ul id="artworks" hx-get="/artworks" hx-trigger="load">
-        </ul>
-    </div>
-  </body>
+    <form id="startCountdown" action="/countdown" method="POST">
+      <button id="countdownKnop" type="submit">Start countcown</button>
+      <input type="time" id="inputCountdown" value="00:00"></input>
+    </form>
+  </div>
+
+  <div id="kolomRechts">
+    <ul id="artworks" hx-get="/artworks" hx-trigger="load">
+    </ul>
+  </div>
+</body>
+
 </html>
