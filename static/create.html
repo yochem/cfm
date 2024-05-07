@@ -2,61 +2,44 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <meta charset="utf-8">
-  <title>Create</title>
-  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/create-page.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
-  <script src="https://unpkg.com/htmx.org@1.9.12"
-    integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
-    crossorigin="anonymous"></script>
+	<meta charset="utf-8">
+	<title>Create</title>
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/create-page.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap"
+		rel="stylesheet">
+	<script src="https://unpkg.com/htmx.org@1.9.12"
+		integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+		crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <header>
-    <a id="back" href="/">&lt;back</a>
-  </header>
-  <div id="matrix" hx-get="/artworks/0" hx-trigger="load">
-  </div>
-  <div id="knoppen">
-    <input id="naamVak" type="text" name="naam" placeholder="Name artwork"><br>
-    <button class="important" id="send" type="button" onclick="klikSend()">Send</button><br>
-    <div class="thirds">
-      <button type="button" onclick="allOff()" hx-target="#matrix">None</button>
-      <button type="button" onclick="allOn()">All</button>
-      <button type="button" onclick="negative()">Invert</button>
-    </div>
-  </div>
+	<header>
+		<a id="back" href="/">&lt;back</a>
+	</header>
+	<div id="matrix" hx-get="/artworks/0" hx-trigger="load">
+	</div>
+	<div id="knoppen">
+		<input id="naamVak" type="text" name="naam" placeholder="Name artwork"><br>
+		<button class="important" id="send" type="button" hx-post="/artworks" hx-target="#matrix"
+			hx-include="#matrix">Send</button><br>
+		<div class="thirds">
+			<button type="button" hx-get="/artworks/preset/empty" hx-target="#matrix">None</button>
+			<button type="button" hx-get="/artworks/preset/full" hx-target="#matrix">All</button>
+			<button type="button" onclick="negative()">Invert</button>
+		</div>
+	</div>
 </body>
 
 <script>
-  function toggleOnOff(el) {
-    el.classList.toggle('on');
-    el.classList.toggle('off');
-  }
-
-  function negative() {
-    for (tl of document.getElementsByClassName('tl')) {
-      toggleOnOff(tl);
-    }
-  }
-
-  function allOn() {
-    for (tl of document.getElementsByClassName('tl')) {
-      tl.classList.add('on');
-      tl.classList.remove('off');
-    }
-  }
-
-  function allOff() {
-    for (tl of document.getElementsByClassName('tl')) {
-      tl.classList.add('off');
-      tl.classList.remove('on');
-    }
-  }
+	function negative() {
+		for (tl of document.getElementsByClassName('tl')) {
+			tl.value = tl.value == 'on' ? 'off' : 'on';
+		}
+	}
 </script>
+
 </html>

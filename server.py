@@ -14,12 +14,33 @@ def artworks_list() -> str:
     return flask.render_template("artworks-list.html", artworks=artworks)
 
 
+@app.post("/artworks")
+def add_artwork() -> str:
+    print(flask.request.form.keys())
+
+    return empty_artwork()
+
+
+@app.get("/artworks/preset/empty")
+def empty_artwork() -> str:
+    on_offs = ["off"] * 42
+    return flask.render_template("led-matrix.html", config=on_offs)
+
+
+@app.get("/artworks/preset/full")
+def full_artwork() -> str:
+    on_offs = ["on"] * 42
+    return flask.render_template("led-matrix.html", config=on_offs)
+
+
 @app.get("/artworks/<int:conf>")
 def artwork_display(conf: int) -> str:
     bits = database.num_to_bitarray(conf)
     on_offs = ["on" if bit else "off" for bit in bits]
 
-    return flask.render_template("led-matrix.html", config=on_offs)
+    readonly = 'disabled' if 'readonly' in flask.request.args else ''
+
+    return flask.render_template("led-matrix.html", config=on_offs, disabled=readonly)
 
 
 @app.delete("/artworks/<int:conf>")

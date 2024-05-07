@@ -34,11 +34,13 @@ button.important:hover {
 }
 
 
-.tl.on {
+.tl {
 	background-color: #FFFFFF;
+	border: none;
+	color: transparent;
 }
 
-.tl.off {
+.tl[value='off'] {
 	box-sizing: border-box;
 	border-style: solid;
 	border-color: #555555;
