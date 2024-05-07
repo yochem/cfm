@@ -40,7 +40,7 @@ button.important:hover {
 	color: transparent;
 }
 
-.tl[value='off'] {
+.tl:has(input[value='off']) {
 	box-sizing: border-box;
 	border-style: solid;
 	border-color: #555555;

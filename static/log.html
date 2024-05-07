@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Logs</title>
-        <link rel="stylesheet" href="static/style.css"/>
-    </head>
-    <body>
-        <div style="font-family: monospace">
-            {{range $val := .}}
-                {{$val}}<br>
-            {{end}}
-        </div>
-    </body>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>CFM | Logs</title>
+	</head>
+	<body>
+		<div style="font-family: monospace">
+			{{range $val := .}}
+				{{$val}}<br>
+			{{end}}
+		</div>
+	</body>
 </html>

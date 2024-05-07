@@ -23,9 +23,11 @@
 	<div id="matrix" hx-get="/artworks/0" hx-trigger="load">
 	</div>
 	<div id="knoppen">
-		<input id="naamVak" type="text" name="naam" placeholder="Name artwork"><br>
-		<button class="important" id="send" type="button" hx-post="/artworks" hx-target="#matrix"
-			hx-include="#matrix">Send</button><br>
+		<form>
+			<input id="naamVak" type="text" name="display_name" placeholder="Name artwork"><br>
+			<button class="important" id="send" hx-post="/artworks" hx-target="#matrix"
+				hx-include="#matrix">Send</button><br>
+		</form>
 		<div class="thirds">
 			<button type="button" hx-get="/artworks/preset/empty" hx-target="#matrix">None</button>
 			<button type="button" hx-get="/artworks/preset/full" hx-target="#matrix">All</button>
@@ -37,7 +39,7 @@
 <script>
 	function negative() {
 		for (tl of document.getElementsByClassName('tl')) {
-			tl.value = tl.value == 'on' ? 'off' : 'on';
+			toggle(tl);
 		}
 	}
 </script>

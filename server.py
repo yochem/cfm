@@ -15,10 +15,29 @@ def artworks_list() -> str:
 
 
 @app.post("/artworks")
-def add_artwork() -> str:
-    print(flask.request.form.keys())
+def add_artwork() -> flask.Response:
+    form = flask.request.form
 
-    return empty_artwork()
+    name = form.get('display_name')
+    if not name:
+        return flask.Response(empty_artwork())
+
+    try:
+        # get list of 'on'|'off' values and convert to True|False
+        config = [form[f'T{num}'] == 'on' for num in range(42)]
+
+        # which can then be converted to an integer
+        numeric_config = database.bitarray_to_num(config)
+
+        database.add_artwork(numeric_config, values={
+            "display_name": name,
+            "in_random": True
+        })
+    except KeyError:
+        return flask.Response(empty_artwork())
+
+
+    return flask.Response(empty_artwork(), status=201)
 
 
 @app.get("/artworks/preset/empty")
@@ -38,9 +57,12 @@ def artwork_display(conf: int) -> str:
     bits = database.num_to_bitarray(conf)
     on_offs = ["on" if bit else "off" for bit in bits]
 
-    readonly = 'disabled' if 'readonly' in flask.request.args else ''
 
-    return flask.render_template("led-matrix.html", config=on_offs, disabled=readonly)
+    return flask.render_template(
+        "led-matrix.html",
+        config=on_offs,
+        readonly="readonly" in flask.request.args
+    )
 
 
 @app.delete("/artworks/<int:conf>")
@@ -69,7 +91,7 @@ def serve_static(filename: Path) -> flask.Response:
 
 @app.route("/")
 def index() -> flask.Response:
-    return flask.send_file("static/index.html")
+    return flask.send_file("static/select.html")
 
 
 if __name__ == "__main__":
