@@ -1,7 +1,7 @@
 {% for conf in artworks %}
 <li>
 	<label
-		hx-get="/artworks/{{ conf }}"
+		hx-get="/artworks/{{ conf }}?readonly"
 		hx-trigger="mouseenter"
 		hx-target="#matrix"
 	>
